@@ -31,10 +31,7 @@ Y.Crosshair.prototype = {
             yline,
             i,
             len = series.length;
-        yline = new Y.Path({
-            x: cfg.x,
-            y: cfg.y,
-            graphic: cfg.render,
+        yline = graphic.addShape({
             shapeRendering: "crispEdges",
             type: "path",
             stroke: category.stroke
@@ -47,10 +44,7 @@ Y.Crosshair.prototype = {
             for(i = 0; i < len; i = i + 1) {
                 graph = series[i];
                 if(graph.line) {
-                    graph.xLine = new Y.Path({
-                        x: cfg.x,
-                        y: cfg.y,
-                        graphic: cfg.render,
+                    graph.xLine = graphic.addShape({
                         shapeRendering: "crispEdges",
                         type: "path",
                         stroke: graph.stroke,
@@ -58,17 +52,15 @@ Y.Crosshair.prototype = {
                     }).moveTo(0, 0).lineTo(width, 0).end();
                 }
                 if(graph.marker) {
-                    graph.marker.y = cfg.y - graph.marker.height/2;
-                    graph.marker.x = cfg.x - graph.marker.width/2;
+                    graph.marker.y = graph.marker.height/-2;
+                    graph.marker.x = graph.marker.width/-2;
                     graph.marker.type = graph.marker.type || graph.marker.shape;
-                    graph.marker.graphic = cfg.render;
-                    graph.marker.graphic.x = cfg.x - graph.marker.width/2,
-                    graph.marker.graphic.y = cfg.y - graph.marker.height/2,
-                    graph.marker = new Y.Circle(graph.marker);
+                    graph.marker = graphic.addShape(graph.marker);
                 }
             }
             this._series = series;
         }
+        this._xy = graphic.getXY();
         this.graphic = graphic;
     },
 
@@ -79,29 +71,28 @@ Y.Crosshair.prototype = {
      * @param {Number} pageX The x-coordinate to map in which to map the crosshair.
      */
     setTarget: function(pageX) {
-        var xy = this.graphic.getXY(),
+        var xy = this._xy,
             x = pageX - xy[0],
             y,
             series = this._series,
             graph,
-            node,
             i,
             index = Math.floor((x / this.width) * this._xcoords.length),
             len = series.length;
-        Y.DOM.setStyle(this._yline.get("graphic").get("node"), 'transform', 'translatex(' + x + 'px)');
+        this._yline.set("transform", "translate(" + x + ")");
         if(series) {
             for(i = 0; i < len; i = i + 1) {
                 graph = series[i];
                 y = graph.coords[index];
                 if(graph.marker) {
-                    node = graph.marker.get("graphic").get("node");
-                    Y.DOM.setStyle(node, 'transform', 'translate(' + x + 'px, ' + y + 'px)');
+                    graph.marker.set("transform", "translate(" + x + ", " + y + ")");
                 }
                 if(graph.line) {
-                    Y.DOM.setStyle(graph.line.get("graphic").get("node"), 'transform', 'translate(' + x + 'px, ' + y + 'px)');
+                    graph.line.set("transform", "translate(" + x + ", " + y + ")");
                 }
             }
         }
+        this.graphic._redraw();
     },
 
     /**

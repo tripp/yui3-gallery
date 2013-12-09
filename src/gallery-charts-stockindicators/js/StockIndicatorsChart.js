@@ -192,15 +192,15 @@ Y.extend(StockIndicatorsChart, Y.Widget, {
             pageX = isTouch ? e.changedTouches[0].pageX : e.pageX,
             pageY = isTouch ? e.changedTouches[0].pageY : e.pageY,
             len = crosshairs.length,
-            graphic,
+            chart,
             xy,
             x,
             i;
         if(pageX % 1 === 0 && pageY % 1 === 0 && this.curX !== pageX) {
             for(i = 0; i < len; i = i + 1) {
-                graphic = this._graphics[i];
-                xy = graphic.getXY(),
-                x = pageX - xy[0],
+                chart = this._charts[i];
+                xy = chart.xy,
+                x = pageX - xy[0];
                 crosshair = this._crosshairs[i];
                 crosshair.setTarget(pageX);
             }
@@ -647,7 +647,8 @@ Y.extend(StockIndicatorsChart, Y.Widget, {
             graphs: graphs,
             hotspot: hotspot,
             crosshair: crosshair,
-            legend: legend
+            legend: legend,
+            xy: graphic.getXY()
         };
         //repaint the gridlines and graph
         graphic._redraw();

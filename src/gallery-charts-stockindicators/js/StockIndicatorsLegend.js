@@ -84,6 +84,7 @@ StockIndicatorsLegend.prototype = {
             this.priceDownColor = cfg.priceDownColor;
             this.valueLabelFormat = cfg.valueLabelFormat;
             this.formatDate = cfg.formatDate;
+            this._xy = Y.DOM.getXY(this.contentDiv);
     },
     
     destroy: function() {
@@ -123,7 +124,7 @@ StockIndicatorsLegend.prototype = {
      * @param {Array} dataProvider
      */
     update: function(pageX, dataProvider) {
-        var xy = Y.DOM.getXY(this.contentDiv),
+        var xy = this._xy,
             x = pageX - xy[0],
             index = Math.floor(x / this.width * dataProvider.length),
             dataItem = dataProvider[index],
