@@ -138,27 +138,6 @@ StockIndicatorsChart.ATTRS = {
     }
 };
 Y.extend(StockIndicatorsChart, Y.Widget, {
-    initEvents: function(eo, callbacks) {
-        var className = ".yui3-hotspot",
-            hotspots = this._hotspots,
-			len = hotspots ? hotspots.length : 0;
-        eo.updateCallback(callbacks.update);
-        eo.zoomCallback(callbacks.zoom);
-        eo.pinchCallback(callbacks.pinch);
-        eo.graphs = this;
-        if(len) {
-            if(len === 1) {
-                Y.on('touchstart', eo.touchStart, className);
-                Y.on('touchmove', eo.touchMove, className);
-                Y.on('touchend', eo.touchEnd, className);
-            }
-            Y.on('mousemove', Y.bind(eo.moveEvent, this), className);
-            Y.on('gesturemovestart', Y.bind(eo.startMoveEvent, this), className);
-            Y.on('gesturemove', Y.bind(eo.moveEvent, this), className);
-            Y.on('gesturemoveend', Y.bind(eo.moveEvent, this), className);
-        }
-    },
-
     /**
      * Draws a charts based on a config object.
      *
